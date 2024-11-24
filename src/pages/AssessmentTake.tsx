@@ -1,10 +1,16 @@
 import { Header } from "@/components/Header";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Question {
   id: number;
@@ -49,8 +55,10 @@ const mockAssessment = {
 
 const AssessmentTake = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [timeRemaining, setTimeRemaining] = useState(mockAssessment.timeLimit * 60);
   const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [showCompletion, setShowCompletion] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -82,9 +90,13 @@ const AssessmentTake = () => {
   };
 
   const handleSubmit = () => {
-    toast.success("Assessment submitted successfully!");
+    setShowCompletion(true);
     // Here you would typically submit the answers to a backend
     console.log("Submitted answers:", answers);
+  };
+
+  const handleReturnHome = () => {
+    navigate("/dashboard");
   };
 
   return (
@@ -178,6 +190,33 @@ const AssessmentTake = () => {
           </div>
         </div>
       </main>
+
+      {/* Completion Dialog */}
+      <Dialog open={showCompletion} onOpenChange={setShowCompletion}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl font-semibold">
+              You have completed {mockAssessment.title}!
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <div className="text-center text-gray-600">
+              <p>Course: {mockAssessment.course}</p>
+              <p>Subject: {mockAssessment.description}</p>
+              <p>Semester: {mockAssessment.semester}</p>
+              <p>School Year: {mockAssessment.schoolYear}</p>
+            </div>
+            <div className="flex justify-center">
+              <Button
+                onClick={handleReturnHome}
+                className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-2 rounded-lg transition-colors duration-200"
+              >
+                Return to Dashboard
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
