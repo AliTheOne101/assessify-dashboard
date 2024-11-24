@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const courses = ["IT312", "IT313", "IT314", "IT315", "ITE26"];
 
@@ -12,8 +13,11 @@ const assessments = [
 ];
 
 const Assessments = () => {
+  const navigate = useNavigate();
+
   const handleTakeAssessment = (id: number) => {
     toast.success("Starting assessment...");
+    navigate(`/assessment/${id}`);
   };
 
   return (
