@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Assessments from "./pages/Assessments";
 import AssessmentTake from "./pages/AssessmentTake";
+import CompletedAssessments from "./pages/CompletedAssessments";
+import CompletedAssessmentView from "./pages/CompletedAssessmentView";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/assessments" element={<Assessments />} />
           <Route path="/assessment/:id" element={<AssessmentTake />} />
+          <Route path="/completed-assessments" element={<CompletedAssessments />} />
+          <Route path="/completed-assessment/:id" element={<CompletedAssessmentView />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

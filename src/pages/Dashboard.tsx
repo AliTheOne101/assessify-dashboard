@@ -34,7 +34,10 @@ const Dashboard = () => {
               <p className="text-gray-600">View and take your pending assessments</p>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow-sm card-hover">
+            <div 
+              onClick={() => navigate("/completed-assessments")}
+              className="bg-white p-6 rounded-lg shadow-sm card-hover cursor-pointer"
+            >
               <h2 className="text-xl font-semibold text-gray-800 mb-2">Completed Assessments</h2>
               <p className="text-gray-600">Review your completed assessments</p>
             </div>
