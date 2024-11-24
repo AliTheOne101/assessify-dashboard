@@ -1,7 +1,5 @@
 import { Header } from "@/components/Header";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const completedAssessments = [
   { id: 1, title: "Prelim Exam", timeLimit: 90, course: "IT312", score: "85/100" },
@@ -18,19 +16,9 @@ const CompletedAssessments = () => {
       
       <main className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="animate-fade-in">
-          <div className="flex items-center mb-8">
-            <Button
-              variant="ghost"
-              onClick={() => navigate(-1)}
-              className="mr-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Completed Assessments
-            </h1>
-          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">
+            Completed Assessments
+          </h1>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Courses Section */}
