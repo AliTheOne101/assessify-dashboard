@@ -4,7 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assessment Portal - Completed Assessments</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F1F0FB;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-content {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 1rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1A1F2C;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: #6E59A5;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #E5DEFF;
+            color: #9b87f5;
+        }
+
+        .main-content {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 2rem;
+        }
+
+        .courses-panel {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .course-item {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .course-item:hover {
+            background-color: #E5DEFF;
+            color: #9b87f5;
+        }
+
+        .assessments-table {
+            background-color: white;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #E5DEFF;
+        }
+
+        th {
+            background-color: #F1F0FB;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            color: #6E59A5;
+            font-weight: 600;
+        }
+
+        .view-button {
+            padding: 0.5rem 1rem;
+            background-color: #9b87f5;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-button:hover {
+            background-color: #7E69AB;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem 1.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -18,37 +199,35 @@
     </header>
 
     <main class="main-content">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="bg-white p-6 rounded-lg shadow-sm">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">Courses</h2>
+        <div class="grid-container">
+            <div class="courses-panel">
+                <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem;">Courses</h2>
                 <div id="coursesList"></div>
             </div>
 
-            <div class="md:col-span-3">
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Assessment Title</th>
-                                <th>Course</th>
-                                <th>Score</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="completedAssessmentsList"></tbody>
-                    </table>
-                </div>
+            <div class="assessments-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Assessment Title</th>
+                            <th>Course</th>
+                            <th>Score</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="completedAssessmentsList"></tbody>
+                </table>
             </div>
         </div>
     </main>
 
     <div class="modal" id="logoutModal">
         <div class="modal-content">
-            <h2 class="modal-title">Confirm Logout</h2>
-            <p class="modal-text">Are you sure you want to logout?</p>
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="hideLogoutConfirmation()">Cancel</button>
-                <button class="btn btn-primary" onclick="handleLogout()">Logout</button>
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Confirm Logout</h2>
+            <p style="color: #6E59A5; margin-bottom: 1.5rem;">Are you sure you want to logout?</p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="view-button" style="background-color: #E5DEFF; color: #6E59A5;" onclick="hideLogoutConfirmation()">Cancel</button>
+                <button class="view-button" onclick="handleLogout()">Logout</button>
             </div>
         </div>
     </div>
@@ -66,14 +245,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const user = localStorage.getItem('user');
             if (!user) {
-                window.location.href = 'standalone-login.html';
+                window.location.href = 'login.html';
                 return;
             }
 
             renderCourses();
             renderCompletedAssessments();
 
-            document.getElementById('logoutButton').addEventListener('click', handleLogout);
+            document.getElementById('logoutButton').addEventListener('click', showLogoutConfirmation);
         });
 
         function renderCourses() {
@@ -106,11 +285,19 @@
             }, 1000);
         }
 
+        function showLogoutConfirmation() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        function hideLogoutConfirmation() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
         function handleLogout() {
             localStorage.removeItem('user');
             showToast('Logged out successfully');
             setTimeout(() => {
-                window.location.href = 'standalone-login.html';
+                window.location.href = 'login.html';
             }, 1000);
         }
 

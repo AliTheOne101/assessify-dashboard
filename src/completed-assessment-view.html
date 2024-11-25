@@ -4,7 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assessment Portal - View Completed Assessment</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #F1F0FB;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-content {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 1rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1A1F2C;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: #6E59A5;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: #E5DEFF;
+            color: #9b87f5;
+        }
+
+        .main-content {
+            max-width: 60rem;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .assessment-header {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .assessment-header h2 {
+            font-size: 1.5rem;
+            color: #1A1F2C;
+            margin-bottom: 1rem;
+        }
+
+        .assessment-header p {
+            color: #6E59A5;
+            margin-bottom: 0.5rem;
+        }
+
+        .question-card {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .question-card h3 {
+            color: #1A1F2C;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .question-card p {
+            color: #6E59A5;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .correct-answer {
+            color: #10B981;
+            background-color: #ECFDF5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .incorrect-answer {
+            color: #EF4444;
+            background-color: #FEF2F2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem 1.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -25,7 +195,7 @@
                     </svg>
                     Back
                 </button>
-                <button class="nav-link danger" onclick="showLogoutConfirmation()">
+                <button class="nav-link" onclick="showLogoutConfirmation()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
@@ -43,11 +213,11 @@
 
     <div class="modal" id="logoutModal">
         <div class="modal-content">
-            <h2 class="modal-title">Confirm Logout</h2>
-            <p class="modal-text">Are you sure you want to logout?</p>
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="hideLogoutConfirmation()">Cancel</button>
-                <button class="btn btn-primary" onclick="handleLogout()">Logout</button>
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">Confirm Logout</h2>
+            <p style="color: #6E59A5; margin-bottom: 1.5rem;">Are you sure you want to logout?</p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button class="nav-link" style="background-color: #E5DEFF;" onclick="hideLogoutConfirmation()">Cancel</button>
+                <button class="nav-link" style="background-color: #9b87f5; color: white;" onclick="handleLogout()">Logout</button>
             </div>
         </div>
     </div>
@@ -86,7 +256,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const user = localStorage.getItem('user');
             if (!user) {
-                window.location.href = 'standalone-login.html';
+                window.location.href = 'login.html';
                 return;
             }
 
@@ -132,10 +302,10 @@
             if (question.type === 'multiple_choice') {
                 answerHtml += `
                     <div style="margin-top: 1rem;">
-                        <p>Options:</p>
-                        <ul>
+                        <p style="color: #6E59A5;">Options:</p>
+                        <ul style="margin-left: 1.5rem; color: #6E59A5;">
                             ${question.options.map(option => `
-                                <li style="margin-left: 1rem;">${option}</li>
+                                <li style="margin-top: 0.5rem;">${option}</li>
                             `).join('')}
                         </ul>
                     </div>
@@ -157,7 +327,7 @@
             localStorage.removeItem('user');
             showToast('Logged out successfully');
             setTimeout(() => {
-                window.location.href = 'standalone-login.html';
+                window.location.href = 'login.html';
             }, 1000);
         }
 

@@ -4,11 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assessment Portal - Login</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #9b87f5 0%, #7E69AB 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 28rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1A1F2C;
+            margin-bottom: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6E59A5;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #E5DEFF;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #9b87f5;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #9b87f5;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-button:hover {
+            background-color: #7E69AB;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            padding: 1rem 1.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    </style>
 </head>
-<body class="flex items-center justify-center">
-    <div class="form-container">
-        <h1 class="text-2xl font-bold text-gray-800 text-center mb-8">Assessment Portal</h1>
+<body>
+    <div class="login-container">
+        <h1 class="title">Assessment Portal</h1>
         <form id="loginForm">
             <div class="form-group">
                 <label class="form-label" for="username">Username</label>
@@ -18,7 +116,7 @@
                 <label class="form-label" for="password">Password</label>
                 <input class="form-input" type="password" id="password" required>
             </div>
-            <button type="submit" class="btn btn-primary w-full">Sign in</button>
+            <button type="submit" class="submit-button">Sign in</button>
         </form>
     </div>
 
