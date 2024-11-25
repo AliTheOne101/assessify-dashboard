@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Portal - View Completed Assessment</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">Assessment Portal</h1>
+            <div class="nav-buttons">
+                <a href="dashboard.html" class="nav-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Home
+                </a>
+                <button class="nav-link" onclick="history.back()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back
+                </button>
+                <button class="nav-link danger" onclick="showLogoutConfirmation()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div id="assessmentContent"></div>
+    </main>
+
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Confirm Logout</h2>
+            <p class="modal-text">Are you sure you want to logout?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideLogoutConfirmation()">Cancel</button>
+                <button class="btn btn-primary" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const completedAssessment = {
+            id: 1,
+            title: "Prelim Exam",
+            course: "IT312",
+            score: "85/100",
+            questions: [
+                {
+                    question: "What is the primary purpose of a constructor?",
+                    type: "multiple_choice",
+                    userAnswer: "To copy objects",
+                    correctAnswer: "To initialize objects",
+                    options: ["To destroy objects", "To initialize objects", "To copy objects", "To compare objects"]
+                },
+                {
+                    question: "Define encapsulation in your own words.",
+                    type: "text",
+                    userAnswer: "Hiding implementation details",
+                    correctAnswer: "Bundling of data and the methods that operate on that data within a single unit or object"
+                },
+                {
+                    question: "Java is a purely object-oriented programming language.",
+                    type: "true_false",
+                    userAnswer: "true",
+                    correctAnswer: "false"
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('user');
+            if (!user) {
+                window.location.href = 'standalone-login.html';
+                return;
+            }
+
+            renderAssessment();
+        });
+
+        function renderAssessment() {
+            const content = document.getElementById('assessmentContent');
+            
+            content.innerHTML = `
+                <div class="assessment-header">
+                    <h2>${completedAssessment.title}</h2>
+                    <p>Course: ${completedAssessment.course}</p>
+                    <p>Score: ${completedAssessment.score}</p>
+                </div>
+                ${completedAssessment.questions.map((q, index) => `
+                    <div class="question-card">
+                        <h3>Question ${index + 1}</h3>
+                        <p>${q.question}</p>
+                        ${renderAnswer(q)}
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function renderAnswer(question) {
+            const isCorrect = question.userAnswer === question.correctAnswer;
+            
+            let answerHtml = `
+                <div class="${isCorrect ? 'correct-answer' : 'incorrect-answer'}">
+                    <p>Your Answer: ${question.userAnswer}</p>
+                </div>
+            `;
+
+            if (!isCorrect) {
+                answerHtml += `
+                    <div class="correct-answer">
+                        <p>Correct Answer: ${question.correctAnswer}</p>
+                    </div>
+                `;
+            }
+
+            if (question.type === 'multiple_choice') {
+                answerHtml += `
+                    <div style="margin-top: 1rem;">
+                        <p>Options:</p>
+                        <ul>
+                            ${question.options.map(option => `
+                                <li style="margin-left: 1rem;">${option}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            return answerHtml;
+        }
+
+        function showLogoutConfirmation() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        function hideLogoutConfirmation() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('user');
+            showToast('Logged out successfully');
+            setTimeout(() => {
+                window.location.href = 'standalone-login.html';
+            }, 1000);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

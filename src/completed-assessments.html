@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Portal - Completed Assessments</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="header-title">Assessment Portal</h1>
+            <div class="nav-buttons">
+                <a href="dashboard.html" class="nav-link">Home</a>
+                <a href="#" class="nav-link" id="logoutButton">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Courses</h2>
+                <div id="coursesList"></div>
+            </div>
+
+            <div class="md:col-span-3">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Assessment Title</th>
+                                <th>Course</th>
+                                <th>Score</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completedAssessmentsList"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Confirm Logout</h2>
+            <p class="modal-text">Are you sure you want to logout?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="hideLogoutConfirmation()">Cancel</button>
+                <button class="btn btn-primary" onclick="handleLogout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const courses = ["IT312", "IT313", "IT314", "IT315", "ITE26"];
+        const completedAssessments = [
+            { id: 1, title: "Prelim Exam", course: "IT312", score: "85/100" },
+            { id: 2, title: "Quiz 1", course: "IT312", score: "28/30" },
+            { id: 3, title: "Midterm Exam", course: "IT313", score: "92/100" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = localStorage.getItem('user');
+            if (!user) {
+                window.location.href = 'standalone-login.html';
+                return;
+            }
+
+            renderCourses();
+            renderCompletedAssessments();
+
+            document.getElementById('logoutButton').addEventListener('click', handleLogout);
+        });
+
+        function renderCourses() {
+            const coursesList = document.getElementById('coursesList');
+            coursesList.innerHTML = courses.map(course => `
+                <div class="course-item">${course}</div>
+            `).join('');
+        }
+
+        function renderCompletedAssessments() {
+            const completedAssessmentsList = document.getElementById('completedAssessmentsList');
+            completedAssessmentsList.innerHTML = completedAssessments.map(assessment => `
+                <tr>
+                    <td>${assessment.title}</td>
+                    <td>${assessment.course}</td>
+                    <td>${assessment.score}</td>
+                    <td>
+                        <button class="view-button" onclick="viewAssessment(${assessment.id})">
+                            View Details
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function viewAssessment(id) {
+            showToast('Loading assessment details...');
+            setTimeout(() => {
+                window.location.href = `completed-assessment-view.html?id=${id}`;
+            }, 1000);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('user');
+            showToast('Logged out successfully');
+            setTimeout(() => {
+                window.location.href = 'standalone-login.html';
+            }, 1000);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
